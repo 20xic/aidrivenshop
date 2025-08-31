@@ -16,8 +16,8 @@ class Product(Base):
     sku: Mapped[str] = mapped_column(String(100), nullable=False)
     stock_quantity: Mapped[int] = mapped_column(Integer, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-    main_image: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False)
-    gallery: Mapped[list[uuid.UUID]] = mapped_column(ARRAY(UUID(as_uuid=True)), nullable=False)
+    main_image: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True)
+    gallery: Mapped[list[uuid.UUID] | None] = mapped_column(ARRAY(UUID(as_uuid=True)), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, 

@@ -10,7 +10,7 @@ class Category(Base):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     slug: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=False)
-    image: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False)
+    image: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True)
 
     parent_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), 
