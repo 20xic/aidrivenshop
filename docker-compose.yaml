@@ -1,0 +1,51 @@
+services:
+  aidrivenshopdb:
+    image: postgres:15
+    container_name: aidrivenshopdb
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres
+    volumes:
+      # - ./aidrivenshopdb/migrations/init:/docker-entrypoint-initdb.d  
+      - aidrivenshopdb_data:/var/lib/postgresql/data
+      # - ./aidrivenshopdb/migrations/backups:/backups     
+    ports:
+      - "5441:5432"
+    networks:
+      - main_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+  
+  app:
+    build:
+      context: ./app
+      args:
+        - APP_PORT=${APP__RUN__PORT} 
+    container_name: app
+    environment:  
+    - APP__RUN__HOST=${APP__RUN__HOST}
+    - APP__RUN__PORT=${APP__RUN__PORT}
+    - APP__DB__PORT=${APP__DB__PORT}
+    - APP__DB__HOST=${APP__DB__HOST}
+    - APP__DB__USER=${APP__DB__USER}
+    - APP__DB__PASSWORD=${APP__DB__PASSWORD}
+    - APP__DB__NAME=${APP__DB__NAME}
+    ports:
+      - "${APP__RUN__PORT}:${APP__RUN__PORT}" 
+    networks:
+      - main_network
+    depends_on:
+      aidrivenshopdb:
+        condition: service_healthy
+    volumes:
+      - ./app:/app
+  
+networks:
+  main_network:
+
+volumes:
+  aidrivenshopdb_data:
