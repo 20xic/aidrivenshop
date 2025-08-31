@@ -12,7 +12,7 @@ from api import router as api_router
 async def lifespan(FastAPI):
     logger.info("Application is starting")
     try:
-        minio_helper
+        minio_helper.connect()
     except Exception as e:
         logger.error(f"Failed to connect to Minio: {e}")
         raise
