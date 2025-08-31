@@ -12,14 +12,12 @@ class Category(Base):
     description: Mapped[str] = mapped_column(Text, nullable=False)
     image: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False)
 
-    parent_id: Mapped[uuid.UUID] = mapped_column(
+    parent_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), 
         ForeignKey("categories.id"), 
         nullable=True
     )
     
-    # Self-referential relationship
     parent = relationship("Category", remote_side="Category.id", backref="subcategories")
-    
-    # Используем строки для отложенного импорта
+
     products = relationship("Product", back_populates="category")
